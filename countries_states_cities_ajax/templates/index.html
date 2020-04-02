@@ -1,0 +1,125 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+    <title>DJango Ajax Post Comments App</title>
+
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"></script>
+
+    <script type='text/javascript'>
+$(document).ready(function() {
+    $.ajax({
+        type: "GET",
+        url: "countries",
+        dataType: "json",
+        success: function(response) {
+            var countries = JSON.parse(response["countries"]);
+            $("#country option").remove();
+            var msg_data = "<option  value='0'>--Select Country--</option>";
+            $("#country").append(msg_data).value;
+            $.each(countries, function(i, country) {
+                msg_data = "<option  value='" + country.pk + "'>" + country.fields.country_name + "</option>";
+                $("#country").append(msg_data).value;
+            });
+        }
+    });
+
+    $("#country").click(function(e) {
+        e.preventDefault();
+        var countryId = $("#country").val();
+        $.ajax({
+            type: "GET",
+            url: "states?countryId=" + countryId,
+            dataType: "json",
+            success: function(response) {
+                var states = JSON.parse(response["states"]);
+                $("#state option").remove();
+                var msg_data = "<option  value='0'>--Select State--</option>";
+                $("#state").append(msg_data).value;
+                $.each(states, function(i, state) {
+                    msg_data = "<option  value='" + state.pk + "'>" + state.fields.state_name + "</option>";
+                    $("#state").append(msg_data).value;
+                });
+            }
+        });
+    });
+
+    $("#state").click(function(e) {
+        e.preventDefault();
+        var stateId = $("#state").val();
+        $.ajax({
+            type: "GET",
+            url: "cities?stateId=" + stateId,
+            dataType: "json",
+            success: function(response) {
+                var cities = JSON.parse(response["cities"]);
+                $("#city option").remove();
+                var msg_data = "<option  value='0'>--Select State--</option>";
+                $("#city").append(msg_data).value;
+                $.each(cities, function(i, city) {
+                    msg_data = "<option  value='" + city.pk + "'>" + city.fields.city_name + "</option>";
+                    $("#city").append(msg_data).value;
+                });
+            }
+        });
+    });
+});
+	 </script>
+
+</head>
+<body>
+   <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+      <a class="navbar-brand" href="#">Navbar</a>
+      <span class="navbar-text">COUNTRY STATE CITY SELECT OPTION AJAX in Django</span>
+   </nav>
+   <div class="container-fluid">
+      <div id="wrapper">
+         <div id="content">
+            <div class="container-fluid">
+               <div class="container">
+                  <div class="container-fluid">
+                     <div class="row">
+                        <div class="col-lg-3" ></div>
+                        <div class="col-lg-6" >
+                           <!-- Dropdown Card Example -->
+                           <div class="card shadow border-success   mb-4">
+                              <!-- Card Header - Dropdown -->
+                              <div class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                 <h6 class="m-0 font-weight-bold text-primary"> COUNTRY STATE CITY SELECT
+                                    OPTION
+                                 </h6>
+                              </div>
+                              <!-- Card Body -->
+                              <div class="card-body text-success">
+                                 <div class="form-group">
+                                    <label for="sel1">Select Country:</label>
+                                    <select class="form-control" id="country"></select>
+                                 </div>
+                                 <div class="form-group">
+                                    <label for="sel2">Select State:</label>
+                                    <select class="form-control" id="state"></select>
+                                 </div>
+                                 <div class="form-group">
+                                    <label for="sel3">Select City:</label>
+                                    <select class="form-control" id="city"></select>
+                                 </div>
+                              </div>
+                           </div>
+                        </div>
+                        <div class="col-lg-3" ></div>
+                     </div>
+                  </div>
+               </div>
+            </div>
+         </div>
+      </div>
+   </div>
+</body>
+</html>
+
+
